@@ -1,0 +1,25 @@
+<?php
+// module/Shaker/view/shaker/shaker/index.phtml:
+$this->headScript()->appendFile(
+    $this->basePath() . '/js/shake.js',
+    'text/javascript'
+);
+
+$title = 'Shaker';
+$this->headTitle($title);
+?>
+
+<!-- Block-->
+<div class="container clients black">
+    <div class="page-header">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <input type="text" id="search" class="search-query large span11" placeholder="Search">
+    <br/>
+    <br/>
+    <div id="cocktailList">
+        <div class="row">
+        </div>
+    </div>
+
+</div>

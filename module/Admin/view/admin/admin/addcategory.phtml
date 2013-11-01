@@ -1,0 +1,30 @@
+<!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+<?php
+// module/Admin/view/admin/admin/addcategory.phtml:
+
+
+    $title = 'Add new category';
+    $this->headTitle($title);
+    ?>
+
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+    <?php
+    $form->setAttribute('action', $this->url('admin', array('action' => 'addcategory')));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+    echo $this->formHidden($form->get('idCategory')) . '</br>';
+    echo $this->formRow($form->get('categoryName')) . '</br>';
+    echo $this->formSubmit($form->get('submit')) . '</br>';
+    echo $this->form()->closeTag();
+
+
+
+    ?>
+<?php endif?>

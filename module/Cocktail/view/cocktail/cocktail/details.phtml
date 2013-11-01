@@ -1,0 +1,69 @@
+<?php
+// module/Cocktail/view/cocktail/cocktail/details.phtml:
+
+$title = $cocktail->cocktailName;
+$this->headTitle($title);
+?>
+
+<div class="container white-opacity">
+
+    <div class="blog-post">
+        <div class="blog-header">
+            <h1><?php echo $this->escapeHtml($title); ?></h1>
+            <div class="scissorz"></div>
+        </div>
+        <div class="embed-container">
+            <div class="span3">
+                <img src="<?php print BASE_URL; ?>data/cocktailImages/<?php  echo $cocktail->cocktailImageAdress; ?>" />
+            </div>
+            <div class="row">
+                <div class="span8">
+                    <table class="table">
+                        <tr>
+                            <th>Test</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="span5">
+                    <table class="table">
+                        <tr>
+                            <th>Ingridienti per fare cocktail</th>
+                        </tr>
+                        <?php
+                        foreach ($ingridients as $ingridient)
+                        {
+
+                            print '<tr><td><a href="' . $this->url('ingridients',
+                                    array('action'=>'details', 'id' => $ingridient['idIngridient'])) . '">' . $ingridient['ingridientName'] . '</a></td><td>' . $ingridient['quantity'] . '</td></tr>';?>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                </div>
+                <div class="span6">
+                    <table class="table">
+                        <tr>
+                            <th>Attrezzature per fare cocktail</th>
+                        </tr>
+
+                        <?php
+                        foreach ($ingridients as $ingridient)
+                        {
+
+                            print '<tr><td><a href="' . $this->url('ingridients',
+                                    array('action'=>'details', 'id' => $ingridient['idIngridient'])) . '">' . $ingridient['ingridientName'] . '</a></td><td>' . $ingridient['quantity'] . '</td></tr>';?>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

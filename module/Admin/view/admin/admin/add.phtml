@@ -1,0 +1,32 @@
+<!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+<?php
+// module/Admin/view/admin/admin/add.phtml:
+
+
+$title = 'Add new cocktail';
+$this->headTitle($title);
+?>
+
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$form->setAttribute('action', $this->url('admin', array('action' => 'add')));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('idCocktail')) . '</br>';
+echo $this->formRow($form->get('cocktailName')) . '</br>';
+echo $this->formRow($form->get('cocktailDescription')) . '</br>';
+echo $this->formRow($form->get('cocktailImageAdress')) . '</br>';
+echo $this->formSubmit($form->get('submit')) . '</br>';
+echo $this->form()->closeTag();
+
+
+
+?>
+<?php endif?>

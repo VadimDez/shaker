@@ -1,0 +1,184 @@
+
+<?php
+// module/Admin/view/admin/admin/index.phtml:
+// adding scripts
+$this->headScript()->appendFile(
+    $this->basePath() . '/js/functions.js',
+    'text/javascript'
+);
+$title = 'Cocktails';
+$this->headTitle($title);
+?>
+<!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+    <div class="container blue">
+        <div class="page-header">
+            <h1>Admin panel</h1>
+        </div>
+
+        <div class="row">
+            <div class="span12">
+                <div class="container black row span11">
+                    <div style="float:left; padding-right:16px;"><?php echo $this->gravatar($this->zfcUserIdentity()->getEmail()) ?></div>
+                    <h3><?php echo $this->translate('Hello'); ?>!</h3>
+                    <a href="<?php echo $this->url('zfcuser/logout') ?>">[<?php echo $this->translate('Sign Out'); ?>]</a>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="page-header">
+                    <h1><?php echo $this->escapeHtml($title); ?></h1>
+                </div>
+
+                <p><a href="<?php echo $this->url('admin', array('action'=>'add'));?>">Add new cocktail</a></p>
+
+                <table class="table" id="cocktails">
+                    <tr>
+                        <th>Title</th>
+                        <th>Actions</th>
+                    </tr>
+                    <?php
+                    $num = count($admins);
+                    $step = 10;
+                    $count = 0;
+
+
+                    foreach ($admins as $admin):
+                        if($count < $step)
+                        {
+                            ?>
+
+                            <tr>
+                                <td><a href="<?php echo $this->url('cocktail',
+                                        array('action' => 'details', 'id' => $admin->idCocktail));?>"><?php echo $this->escapeHtml($admin->cocktailName);?></a></td>
+                                <td>
+                                    <a href="<?php echo $this->url('admin',
+                                        array('action'=>'edit', 'id' => $admin->idCocktail));?>">Edit</a>
+                                    <a href="<?php echo $this->url('admin',
+                                        array('action'=>'ingridients', 'id' => $admin->idCocktail));?>">Ingridients</a>
+                                    <a href="<?php echo $this->url('admin',
+                                        array('action'=>'stuff', 'id' => $admin->idCocktail));?>"> Stuff </a>
+                                    <a href="<?php echo $this->url('admin',
+                                        array('action'=>'delete', 'id' => $admin->idCocktail));?>">Delete</a>
+                                </td>
+                            </tr>
+                            <?php
+                            $count++;
+                        }
+
+                    endforeach; ?>
+                </table>
+
+                <button class="btn btn-success" id="loadMoreCocktails">Load more</button>
+                <div class="page-header">
+                    <h1>Categories</h1>
+                </div>
+                <p><a href="<?php echo $this->url('admin', array('action'=>'addcategory'));?>">Add new ingridient</a></p>
+                <table class="table" id="categories">
+                    <tr>
+                        <th>Title</th>
+                        <th>Actions</th>
+                    </tr>
+
+                    <?php
+                    $num = count($categories);
+                    $step = 10;
+                    $count = 0;
+                    foreach ($categories as $category) :
+                        if($count < $step)
+                        {
+                            ?>
+                            <tr>
+                                <td><?php echo $this->escapeHtml($category->categoryName);?></a></td>
+                                <td>
+                                    <a href="<?php echo $this->url('admin',
+                                        array('action'=>'editcategory', 'id' => $category->idCategory));?>">Edit</a>
+                                    <a href="<?php echo $this->url('admin',
+                                        array('action'=>'deletecategory', 'id' => $category->idCategory));?>">Delete</a>
+                                </td>
+                            </tr>
+                            <?php
+                            $count++;
+                        }
+                    endforeach; ?>
+                </table>
+                <button class="btn btn-success" id="loadMoreCategories">Load more</button>
+
+                <div class="page-header">
+                    <h1>Ingridients</h1>
+                </div>
+                <p><a href="<?php echo $this->url('ingridients', array('action'=>'add'));?>">Add new ingridient</a></p>
+                <table class="table" id="ingridients">
+                    <tr>
+                        <th>Title</th>
+                        <th>Actions</th>
+                    </tr>
+                    <?php
+                    $num = count($ingridients);
+                    $step = 10;
+                    $count = 0;
+
+                    foreach ($ingridients as $ingridient) :
+
+                        if($count < $step)
+                        {?>
+                            <tr>
+                                <td><a href="<?php echo $this->url('ingridients',
+                                        array('action'=>'details', 'id' => $ingridient->idIngridient));?>"><?php echo $this->escapeHtml($ingridient->ingridientName);?></a></td>
+                                <td>
+                                    <a href="<?php echo $this->url('ingridients',
+                                        array('action'=>'edit', 'id' => $ingridient->idIngridient));?>">Edit</a>
+                                    <a href="<?php echo $this->url('ingridients',
+                                        array('action'=>'delete', 'id' => $ingridient->idIngridient));?>">Delete</a>
+                                </td>
+                            </tr>
+                            <?php
+                            $count++;
+                        }
+                    endforeach; ?>
+                </table>
+                <button class="btn btn-success" id="loadMoreIngridients">Load more</button>
+
+                <div class="page-header">
+                    <h1>Stuff</h1>
+                </div>
+                <p><a href="<?php echo $this->url('stuff', array('action'=>'add'));?>">Add new stuff</a></p>
+                <table class="table" id="stuff">
+                    <tr>
+                        <th>Title</th>
+                        <th>Actions</th>
+                    </tr>
+                    <?php
+                    $num = count($stuffs);
+                    $step = 10;
+                    $count = 0;
+
+                    foreach ($stuffs as $stuff) :
+
+                        if($count < $step)
+                        {?>
+                            <tr>
+                                <td><a href="<?php echo $this->url('stuff',
+                                        array('action'=>'details', 'id' => $stuff->idStuff));?>"><?php echo $this->escapeHtml($stuff->stuffName);?></a></td>
+                                <td>
+                                    <a href="<?php echo $this->url('stuff',
+                                        array('action'=>'edit', 'id' => $stuff->idStuff));?>">Edit</a>
+                                    <a href="<?php echo $this->url('stuff',
+                                        array('action'=>'delete', 'id' => $stuff->idStuff));?>">Delete</a>
+                                </td>
+                            </tr>
+                            <?php
+                            $count++;
+                        }
+                    endforeach; ?>
+                </table>
+                <button class="btn btn-success" id="loadMoreStuff">Load more</button>
+            </div>
+        </div>
+    </div>
+<?php endif?>

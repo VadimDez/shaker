@@ -1,0 +1,67 @@
+<?php
+// module/Admin/view/admin/admin/ingridients.phtml:
+
+$title = 'Ingridients';
+$this->headTitle($title);
+?>
+<!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+<!-- display the 'display name' of the user -->
+<?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$form->setAttribute('action', $this->url(
+    'admin',
+    array(
+        'action' => 'ingridients',
+        'id'     => $this->id,
+    )
+));
+?>
+<table class="table">
+    <tr>
+        <th>Title</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+    </tr>
+    <?php
+
+    foreach ($used as $use)
+    {
+
+        print '<tr><td><a href="' . $this->url('ingridients',
+            array('action'=>'details', 'id' => $use['idIngridient'])) . '">' . $use['ingridientName'] . '</a></td><td>' . $use['quantity'] . '</td><td>';?>
+        <a href="<?php echo $this->url('admin',
+            array('action'=>'deleteingridient', 'id' => $use['id']));?>">Delete</a>
+
+        <?php print '</td></tr>';
+    }
+    ?>
+</table>
+
+<?php
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('idCocktail')) . '</br>';
+
+
+?>
+
+<br />
+<div>
+    <?php echo $this->formRow($form->get('idIngridient')) . '</br>'; ?>
+    <?php echo $this->formRow($form->get('quantity')) . '</br>'; ?>
+</div>
+
+<?php
+echo $this->formSubmit($form->get('submit')) . '</br>';
+echo $this->form()->closeTag();
+?>
+
+<?php endif?>

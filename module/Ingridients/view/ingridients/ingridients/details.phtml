@@ -1,0 +1,26 @@
+<?php
+// module/Ingridients/view/ingridients/ingridients/details.phtml:
+
+$title = $ingridient->ingridientName;
+$this->headTitle($title);
+?>
+
+<div class="container white-opacity">
+
+    <div class="blog-post">
+        <div class="blog-header">
+            <h1><?php echo $this->escapeHtml($title); ?></h1>
+            <div class="scissorz"></div>
+        </div>
+        <div class="embed-container">
+            <div class="span3">
+                <img src="<?php print BASE_URL; ?>data/ingridientImages/<?php  echo $ingridient->ingridientImageAdress; ?>" />
+            </div>
+            <div class="span7">
+                <p><?php  echo $ingridient->ingridientDescription; ?></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+

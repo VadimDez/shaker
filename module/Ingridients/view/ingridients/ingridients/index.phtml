@@ -1,0 +1,77 @@
+<?php
+// module/Ingridients/view/ingridients/ingridients/index.phtml:
+
+$title = 'Ingridients';
+$this->headTitle($title);
+?>
+
+<div class="page-header">
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+</div>
+<div class="container clients black">
+    <div id="cocktailList">
+            <?php
+            $count = 0;
+            foreach($ingridients as $categoryName => $list)
+            {?>
+                <div class="page-header">
+                    <h1><?php print $categoryName; ?></h1>
+                </div>
+                <div class="row">
+                <?php foreach($list as $idIngridient => $element) :?>
+                <?php
+                if($count < 9)
+                {
+                    $count++;
+                }
+                else
+                {
+                    $count=0;
+                    print '</div><div class="row">';
+                }
+                ?>
+
+                <div class="span100">
+                    <div class="thumbnail">
+                        <a href="<?php echo $this->url('ingridients', array('action' => 'details', 'id' => $element['idIngridient']));?>">
+                            <div class='hover-fader'><img src="<?php print BASE_URL; ?>/data/ingridientMinImages/<?php print $element['ingridientMinImageAdress']; ?>" alt="" style="height:100px" class="img-rounded"></div>
+                            <div class="caption black">
+                                <p><?php echo $this->escapeHtml($element['ingridientName']);?></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+                </div>
+            <?php } ?>
+    </div>
+
+    <button class="btn btn-success" id="request">Load more...</button>
+</div>
+        <?php
+
+               // $byIngridients = array();
+
+//                foreach ($ingridients as $ingridient)
+//                {
+//                    $idIngridient           = $ingridient->idIngridient;
+//                    $ingridientName         = $ingridient['ingridientName'];
+//                    $ingridientImageAdress  = $ingridient['ingridientImageAdress'];
+//                    $ingridientDescription  = $ingridient['ingridientDescription'];
+//                    $idCategory             = $ingridient['idCategory'];
+//
+//                    $name = $ingridient['idCategory'];
+//
+//                    $byIngridients[$idIngridient][$ingridientName][$ingridientImageAdress][$ingridientDescription][$idCategory] = $name;
+//                }
+
+        ?>
+<!--        --><?php //foreach ($ingridients as $ingridient) : ?>
+<!--            <tr>-->
+<!--                <td><a href="--><?php //echo $this->url('ingridients',
+//                        array('action'=>'details', 'id' => $ingridient->idIngridient));?><!--"><img src="--><?php //print BASE_URL . 'data/ingridientImages/' . $ingridient->ingridientImageAdress; ?><!--" style="height: 100px;" />--><?php //echo $this->escapeHtml($ingridient->ingridientName);?><!--</a></td>-->
+<!---->
+<!--            </tr>-->
+<!--        --><?php //endforeach; ?>
+
+

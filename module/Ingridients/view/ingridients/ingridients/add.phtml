@@ -1,0 +1,32 @@
+<!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+<?php
+// module/Ingridients/view/ingridients/ingridients/add.phtml:
+
+$title = 'Add new ingridient';
+$this->headTitle($title);
+?>
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+    $form->setAttribute('action', $this->url('ingridients', array('action' => 'add')));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+    echo $this->formHidden($form->get('idIngridient')) . '</br>';
+    echo $this->formRow($form->get('ingridientName')) . '</br>';
+    echo $this->formRow($form->get('ingridientDescription')) . '</br>';
+    echo $this->formRow($form->get('ingridientImageAdress')) . '</br>';
+    echo $this->formRow($form->get('ingridientMinImageAdress')) . '</br>';
+    echo $this->formRow($form->get('idCategory')) . '</br>';
+    echo $this->formSubmit($form->get('submit')) . '</br>';
+    echo $this->form()->closeTag();
+
+?>
+
+<?php endif?>

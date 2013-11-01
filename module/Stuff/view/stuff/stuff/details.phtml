@@ -1,0 +1,21 @@
+<?php
+// module/Cocktail/view/cocktail/cocktail/details.phtml:
+
+$title = $stuff->stuffName;
+$this->headTitle($title);
+?>
+
+<div class="container white-opacity">
+
+    <div class="blog-post">
+        <div class="blog-header">
+            <h1><?php echo $this->escapeHtml($title); ?></h1>
+            <div class="scissorz"></div>
+        </div>
+        <div class="embed-container">
+            <div class="span3">
+                <img src="<?php print BASE_URL; ?>data/stuffImages/<?php  echo $stuff->stuffImageAdress; ?>" />
+            </div>
+        </div>
+    </div>
+</div>

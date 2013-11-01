@@ -1,0 +1,31 @@
+<!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+<?php
+// module/Ingridients/view/ingridients/ingridients/add.phtml:
+
+    $title = 'Add new stuff';
+    $this->headTitle($title);
+    ?>
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+    <?php
+    $form->setAttribute('action', $this->url('stuff', array('action' => 'add')));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+    echo $this->formHidden($form->get('idStuff')) . '</br>';
+    echo $this->formRow($form->get('stuffName')) . '</br>';
+    echo $this->formRow($form->get('stuffDescription')) . '</br>';
+    echo $this->formRow($form->get('stuffImageAdress')) . '</br>';
+    echo $this->formRow($form->get('stuffMinImageAdress')) . '</br>';
+    echo $this->formSubmit($form->get('submit')) . '</br>';
+    echo $this->form()->closeTag();
+
+    ?>
+
+<?php endif?>

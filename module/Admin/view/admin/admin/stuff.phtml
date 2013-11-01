@@ -1,0 +1,64 @@
+<?php
+// module/Admin/view/admin/admin/stuff.phtml:
+
+$title = 'Stuff';
+$this->headTitle($title);
+?>
+    <!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+    <?php
+    $form->setAttribute('action', $this->url(
+        'admin',
+        array(
+            'action' => 'stuff',
+            'id'     => $this->id,
+        )
+    ));
+
+    ?>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Actions</th>
+        </tr>
+        <?php
+
+        foreach ($used as $use)
+        {
+
+            print '<tr><td><a href="' . $this->url('stuff',
+                    array('action'=>'details', 'id' => $use['idStuff'])) . '">' . $use['stuffName'] . '</a></td><td>';?>
+            <a href="<?php echo $this->url('admin',
+                array('action'=>'deleteingridient', 'id' => $use['id']));?>">Delete</a>
+
+            <?php print '</td></tr>';
+        }
+        ?>
+    </table>
+
+    <?php
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    echo $this->formHidden($form->get('idInvUsage'));
+    echo $this->formHidden($form->get('idCocktail'));
+    ?>
+
+    <br />
+    <div>
+        <?php echo $this->formRow($form->get('idStuff')) . '</br>'; ?>
+    </div>
+
+    <?php
+    echo $this->formSubmit($form->get('submit')) . '</br>';
+    echo $this->form()->closeTag();
+    ?>
+
+<?php endif?>

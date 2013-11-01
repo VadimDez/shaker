@@ -1,0 +1,35 @@
+<!-- Test if the User is connected -->
+<?php if(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php else: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+<?php
+// module/Admin/view/admin/admin/deletecategory.phtml:
+
+    $title = 'Delete category "' . $this->escapeHtml($category->categoryName) . '"';
+    $this->headTitle($title);
+    ?>
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+    <p>Are you sure that you want to delete
+        <b>'<?php echo $this->escapeHtml($category->categoryName); ?>'</b>
+    </p>
+    <?php
+    $url = $this->url('admin', array(
+        'action' => 'deletecategory',
+        'id'     => $this->id,
+    ));
+    ?>
+    <form action="<?php echo $url; ?>" method="post">
+        <div>
+            <input type="hidden" name="id" value="<?php echo (int) $category->idCategory; ?>" />
+            <input type="submit" name="del" value="Yes" />
+            <input type="submit" name="del" value="No" />
+        </div>
+    </form>
+
+
+<?php endif?>

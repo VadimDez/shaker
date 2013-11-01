@@ -1,0 +1,98 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+        //->prependStylesheet($this->basePath() . '/css/style.css')
+        //->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+        //->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+        //->prependStylesheet($this->basePath() . '/css/jquery-ui-1.10.3.custom.min.css')
+        //->prependStylesheet($this->basePath() . '/dsg/css/bootstrap-responsive.css')
+        ->prependStylesheet($this->basePath() . '/dsg/css/styles.css')
+        ->prependStylesheet($this->basePath() . '/dsg/css/font-awesome.min.css')
+        ->prependStylesheet($this->basePath() . '/dsg/css/slider.css')
+        ->prependStylesheet($this->basePath() . '/dsg/css/slider-customs.css')
+        ->prependStylesheet($this->basePath() . '/dsg/css/bootstrap-responsive.css')
+        ->prependStylesheet($this->basePath() . '/dsg/css/bootstrap.css')
+
+    ?>
+
+    <!-- Scripts -->
+    <?php echo $this->headScript()
+        //->prependFile($this->basePath() . '/js/bootstrap.min.js')
+        //->prependFile($this->basePath() . '/js/jquery.min.js')
+        ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+        //->prependFile($this->basePath() . '/js/jquery-1.9.1.js', 'text/javascript')
+        ->prependFile($this->basePath() . '/dsg/js/modernizr.custom.79639.js', 'text/javascript')
+        ->prependFile($this->basePath() . '/dsg/js/bootstrap.min.js', 'text/javascript')
+        ->prependFile($this->basePath() . '/dsg/js/dazein-custom.js', 'text/javascript')
+        ->prependFile($this->basePath() . '/dsg/js/jquery.slitslider.js', 'text/javascript')
+        ->prependFile($this->basePath() . '/dsg/js/jquery.js', 'text/javascript')
+    ; ?>
+</head>
+<body>
+<!-- Navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
+            <a class="hipsta" href="<?php echo $this->url('cocktail') ?>"><img src="http://localhost/cocktails/public/dsg/img/logotype.png" alt=""></a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li><a href="<?php echo $this->url('cocktail') ?>"><?php echo $this->translate('Home') ?></a></li>
+                    <li><a href="<?php echo $this->url('ingridients') ?>"><?php echo $this->translate('Ingridients') ?></a></li>
+                    <li><a href="<?php echo $this->url('shaker') ?>"><?php echo $this->translate('Shaker') ?></a></li>
+                    <li><a href="<?php echo $this->url('admin') ?>"><?php echo $this->translate('Admin') ?></a></li>
+            </div>
+        </div>
+    </div>
+</div>
+<!--No more navbar -->
+
+
+
+<?php echo $this->content; ?>
+
+
+<!--
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="<?php echo $this->url('cocktail') ?>"><?php echo $this->translate('Cocktails') ?></a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="<?php echo $this->url('cocktail') ?>"><?php echo $this->translate('Home') ?></a></li>
+                <li><a href="<?php echo $this->url('ingridients') ?>"><?php echo $this->translate('Ingridients') ?></a></li>
+                <li><a href="<?php echo $this->url('shaker') ?>"><?php echo $this->translate('Shaker') ?></a></li>
+                <li><a href="<?php echo $this->url('admin') ?>"><?php echo $this->translate('Admin') ?></a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+   <!-- </div>
+</nav>
+-->
+<div class="container">
+
+    <hr>
+    <footer>
+        <p>&copy; 2013 <?php if(date('Y')!="2013"){ echo ' - ' . date('Y');} ?> by Dez</p>
+    </footer>
+</div> <!-- /container -->
+<?php echo $this->inlineScript() ?>
+</body>
+</html>
