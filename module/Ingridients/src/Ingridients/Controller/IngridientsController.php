@@ -101,17 +101,16 @@ class IngridientsController extends AbstractActionController
                         $myFolder = $folder->createFolderAndReturnFolderName($name,$path);
                         if($count == 0)
                         {
-                            $size = '/Big.png';
+                            $isize = '/Big.png';
                         }
                         else
                         {
-                            $size = '/min.png';
+                            $isize = '/min.png';
                         }
 
                         $validator = new \Zend\Validator\File\Exists($path);
                         // image adress
-                        $imgAddress = $myFolder . $size;
-                        var_dump($imgAddress);
+                        $imgAddress = $myFolder . $isize;
                         // Perform validation
                         if (!$validator->isValid($imgAddress))
                         {
@@ -121,16 +120,16 @@ class IngridientsController extends AbstractActionController
                                     'overwrite' => true));
 
                             if ($adapter->receive($info['name'])) {
-                                $ingridients->exchangeArray($form->getData());
-
+                                $name = str_replace(' ','_',$name);
                                 // image adress
                                 if($count == 0)
                                 {
-                                    $ingridients->ingridientImageAdress = $name . $size;
+                                    $ingridients->exchangeArray($form->getData()); // todo solve this!
+                                    $ingridients->ingridientImageAdress = $name . $isize;
                                 }
                                 else
                                 {
-                                    $ingridients->ingridientMinImageAdress = $name . $size;
+                                    $ingridients->ingridientMinImageAdress = $name . $isize;
                                 }
                                 $count++;
                             }
@@ -268,8 +267,6 @@ class IngridientsController extends AbstractActionController
                                 $rand = rand(1,1000);
                             }
                         }
-
-
                     }
                 }
 
@@ -326,8 +323,8 @@ class IngridientsController extends AbstractActionController
     {
         $id = (int) $this->params()->fromRoute('id', 0);
 
-        if (!$id) {
-
+        if (!$id)
+        {
             return $this->redirect()->toRoute('ingridients', array(
                 'action' => 'index'
             ));
@@ -343,7 +340,6 @@ class IngridientsController extends AbstractActionController
                 'action' => 'index'
             ));
         }
-
         return new ViewModel(array(
             'ingridient' => $ingridient,
         ));

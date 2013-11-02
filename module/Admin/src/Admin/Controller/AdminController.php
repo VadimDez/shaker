@@ -105,6 +105,7 @@ class AdminController extends AbstractActionController
                     {
                         $name = $this->params()->fromPost('cocktailName');
                         $myFolder = $folder->createFolderAndReturnFolderName($name,$path);
+
                         // image address
                         $imgAddress = $myFolder . '/Big.png';
 
@@ -120,7 +121,7 @@ class AdminController extends AbstractActionController
                             {
                                 $admin->exchangeArray($form->getData());
                                 // image address
-                                $admin->cocktailImageAdress = $name . '/Big.png';
+                                $admin->cocktailImageAdress = str_replace(' ','_',$name) . '/Big.png';
                                 $this->getTable($this->adminTable,'Admin\Model\AdminTable')->saveCocktail($admin);
                             }
                         }
@@ -186,7 +187,7 @@ class AdminController extends AbstractActionController
             if ($del == 'Yes') {
                 // delete folder and files in it
                 $folder = new FolderActions();
-                $folder->deleteFolder($cocktail->cocktailName, './data/cocktailImages');
+                $folder->deleteFolder($cocktail->cocktailName, './data/cocktailImages/');
                 // delete stuff from DB
                 $id = (int) $request->getPost('id');
                 $this->getTable($this->adminTable,'Admin\Model\AdminTable')->deleteCocktail($id);

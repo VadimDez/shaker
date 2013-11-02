@@ -34,7 +34,7 @@ $this->headTitle($title);
                 <div class="span100">
                     <div class="thumbnail">
                         <a href="<?php echo $this->url('ingridients', array('action' => 'details', 'id' => $element['idIngridient']));?>">
-                            <div class='hover-fader'><img src="<?php print BASE_URL; ?>/data/ingridientMinImages/<?php print $element['ingridientMinImageAdress']; ?>" alt="" style="height:100px" class="img-rounded"></div>
+                            <div class='hover-fader'><img src="<?php print BASE_URL; ?>/data/ingridientImages/<?php print $element['ingridientMinImageAdress']; ?>" alt="" style="height:100px" class="img-rounded"></div>
                             <div class="caption black">
                                 <p><?php echo $this->escapeHtml($element['ingridientName']);?></p>
                             </div>

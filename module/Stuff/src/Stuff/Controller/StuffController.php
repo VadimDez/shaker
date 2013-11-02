@@ -43,7 +43,7 @@ class StuffController extends AbstractActionController
     // Add content to this method:
     public function addAction()
     {
-        //@todo refactoring!!! change algoritm and solve some problem
+        //@todo refactoring!!!
         $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $form = new StuffForm($adapter);
         $form->get('submit')->setValue('Add');
