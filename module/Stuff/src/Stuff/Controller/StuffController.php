@@ -92,6 +92,7 @@ class StuffController extends AbstractActionController
                     $count = 0;
                     foreach ($adapter->getFileInfo() as $info)
                     {
+                        // save two images of different sizes
                         // name
                         $name = $this->params()->fromPost('stuffName');
                         $myFolder = $folder->createFolderAndReturnFolderName($name,$path);
@@ -135,7 +136,6 @@ class StuffController extends AbstractActionController
 
                     $this->getStuffTable()->saveStuff($stuff);
                 }
-
 
                 // Redirect to list of stuffs
                 return $this->redirect()->toRoute('stuff');

@@ -408,7 +408,6 @@ class AdminController extends AbstractActionController
                 $id = (int) $request->getPost('id');
                 $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->deleteCategory($id);
             }
-
             return $this->redirect()->toRoute('admin');
         }
 

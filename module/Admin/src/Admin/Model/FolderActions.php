@@ -24,7 +24,7 @@ class FolderActions
 
     public function deleteFolder($name, $dirPath)
     {
-        $dirPath = $dirPath . '/' . str_replace(' ','_',$name);
+        $dirPath = $dirPath . str_replace(' ','_',$name);
         // delete folder with FILES in it
         if (! is_dir($dirPath)) {
             throw new \Exception("$dirPath must be a directory");

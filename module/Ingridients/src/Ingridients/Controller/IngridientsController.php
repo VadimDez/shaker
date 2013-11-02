@@ -10,6 +10,7 @@
 
 namespace Ingridients\Controller;
 
+use Admin\Model\FolderActions;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Ingridients\Model\Ingridients;          // <-- Add this import
@@ -68,7 +69,8 @@ class IngridientsController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-                $size = new Size(array('min'=>20)); //minimum bytes filesize
+
+                $size = new Size(array('min'=>200)); //minimum bytes filesize
 
                 $adapter = new \Zend\File\Transfer\Adapter\Http();
                 $adapterMin = new \Zend\File\Transfer\Adapter\Http();
@@ -83,99 +85,68 @@ class IngridientsController extends AbstractActionController
                     {
                         $error[] = $row;
                     } //set formElementErrors
-                    $form->setMessages(array('ingridientImageAdress'=>$error ));
-                    $form->setMessages(array('ingridientMinImageAdress'=>$error ));
+                    $form->setMessages(array('stufftImageAdress'=>$error ));
+                    $form->setMessages(array('stuffMinImageAdress'=>$error ));
                 } else {
-                    $adapter->setDestination('./data/ingridientImages');
-                    $adapterMin->setDestination('./data/ingridientMinImages');
+                    $path = './data/ingridientImages';
+                    $adapter->setDestination($path);
+                    $folder = new FolderActions();
+
                     $count = 0;
                     foreach ($adapter->getFileInfo() as $info)
                     {
+                        // save two images of different sizes
+                        // name
+                        $name = $this->params()->fromPost('ingridientName');
+                        $myFolder = $folder->createFolderAndReturnFolderName($name,$path);
                         if($count == 0)
                         {
-                            $validator = new \Zend\Validator\File\Exists('./data/ingridientImages');
-
-                            $ckeckIfExist = false;
-                            $rand = rand(1,1000);
-
-                            while($ckeckIfExist == false)
-                            {
-
-                                // image adress
-                                $imgAdress = './data/ingridientImages/' . $rand . '.png';
-
-                                // Perform validation
-                                if (!$validator->isValid($imgAdress)) {
-                                    //
-                                    $ckeckIfExist = true;
-
-                                    // file is valid
-                                    $adapter->addFilter('File\Rename',
-                                        array('target' => $imgAdress,
-                                            'overwrite' => true));
-                                    if ($adapter->receive($info['name'])) {
-                                        $ingridients->exchangeArray($form->getData());
-
-                                        // image adress
-                                        //@todo solve this problem
-                                        //$ingridients->ingridientImageAdress = $rand . '.png';
-                                        $adressForLargeImage = $rand . '.png';
-                                        $count++;
-                                    }
-                                }
-                                else
-                                {
-                                    // if exist random ID
-                                    // regenerate it
-                                    $rand = rand(1,1000);
-                                }
-                            }
+                            $size = '/Big.png';
                         }
-                        elseif($count == 1)
+                        else
                         {
-                            $validator = new \Zend\Validator\File\Exists('./data/ingridientMinImages');
+                            $size = '/min.png';
+                        }
 
-                            $ckeckIfExist = false;
-                            $rand = rand(1,1000);
+                        $validator = new \Zend\Validator\File\Exists($path);
+                        // image adress
+                        $imgAddress = $myFolder . $size;
+                        var_dump($imgAddress);
+                        // Perform validation
+                        if (!$validator->isValid($imgAddress))
+                        {
+                            // file is valid
+                            $adapter->addFilter('File\Rename',
+                                array('target' => $imgAddress,
+                                    'overwrite' => true));
 
-                            while($ckeckIfExist == false)
-                            {
+                            if ($adapter->receive($info['name'])) {
+                                $ingridients->exchangeArray($form->getData());
 
                                 // image adress
-                                $imgAdress = './data/ingridientMinImages/' . $rand . '.png';
-
-                                // Perform validation
-                                if (!$validator->isValid($imgAdress)) {
-                                    //
-                                    $ckeckIfExist = true;
-
-                                    // file is valid
-                                    $adapterMin->addFilter('File\Rename',
-                                        array('target' => $imgAdress,
-                                            'overwrite' => true));
-                                    if ($adapterMin->receive($info['name'])) {
-                                        $ingridients->exchangeArray($form->getData());
-
-                                        // image adress
-                                        $ingridients->ingridientMinImageAdress = $rand . '.png';
-                                        $count++;
-                                    }
+                                if($count == 0)
+                                {
+                                    $ingridients->ingridientImageAdress = $name . $size;
                                 }
                                 else
                                 {
-                                    // if exist random ID
-                                    // regenerate it
-                                    $rand = rand(1,1000);
+                                    $ingridients->ingridientMinImageAdress = $name . $size;
                                 }
+                                $count++;
                             }
                         }
 
                     }
-                    $ingridients->ingridientImageAdress = $adressForLargeImage;
-                    $this->getIngridientsTable()->saveIngridients($ingridients);
+                    try {
+                        $this->getIngridientsTable()->saveIngridients($ingridients);
+                    }
+                    catch (\Exception $ex) {
+                        return $this->redirect()->toRoute('ingridients', array(
+                            'action' => 'index'
+                        ));
+                    }
+
                 }
-
-
                 // Redirect to list of ingridientss
                 return $this->redirect()->toRoute('ingridients');
             }
@@ -330,7 +301,13 @@ class IngridientsController extends AbstractActionController
             $del = $request->getPost('del', 'No');
 
             if ($del == 'Yes') {
+                // delete folder and files in it
                 $id = (int) $request->getPost('id');
+
+                $ingredient = $this->getIngridientsTable()->getIngridients($id);
+                $folder = new FolderActions();
+                $folder->deleteFolder($ingredient->ingridientName,'./data/ingridientImages/');
+
                 $this->getIngridientsTable()->deleteIngridients($id);
             }
 
