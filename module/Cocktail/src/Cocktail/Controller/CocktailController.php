@@ -10,14 +10,9 @@
 
 namespace Cocktail\Controller;
 
+use Cocktail\Model\Result;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Cocktail\Model\Cocktail;          // <-- Add this import
-use Cocktail\Form\CocktailForm;       // <-- Add this import
-
-use Zend\Validator\File\Size;
-
-use Zend\Db\Sql\Sql;
 
 class CocktailController extends AbstractActionController
 {
@@ -34,30 +29,6 @@ class CocktailController extends AbstractActionController
 
     public function indexAction()
     {
-        /*
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toRoute('cocktail', array(
-                'action' => 'index'
-            ));
-        }
-
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
-        try {
-            $cocktails = $this->getCocktailTable()->getCocktail($id);
-        }
-        catch (\Exception $ex) {
-            return $this->redirect()->toRoute('cocktail', array(
-                'action' => 'index'
-            ));
-        }
-
-        return new ViewModel(array(
-            'cocktail' => $this->getCocktailTable()->getCocktail($id),
-        ));
-        */
-
         return new ViewModel(array(
             'cocktails' => $this->getCocktailTable()->fetchAll(),
         ));
@@ -73,8 +44,6 @@ class CocktailController extends AbstractActionController
             ));
         }
 
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
         try {
             $cocktails = $this->getCocktailTable()->getCocktail($id);
         }
@@ -84,29 +53,26 @@ class CocktailController extends AbstractActionController
             ));
         }
         return new ViewModel(array(
-            'cocktails' => $this->getCocktailTable()->fetchAll(),
+            'cocktails' => $cocktails
         ));
-
     }
 
     public function detailsAction()
     {
         $id = (int) $this->params()->fromRoute('id', 0);
 
-        if (!$id) {
-
+        if (!$id)
+        {
             return $this->redirect()->toRoute('cocktail', array(
                 'action' => 'index'
             ));
         }
 
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
         try {
             $cocktails = $this->getCocktailTable()->getCocktail($id);
         }
-        catch (\Exception $ex) {
-
+        catch (\Exception $ex)
+        {
             return $this->redirect()->toRoute('cocktail', array(
                 'action' => 'index'
             ));
@@ -121,14 +87,11 @@ class CocktailController extends AbstractActionController
         {
             $records[] = $res;
         }
-
         return new ViewModel(array(
             'cocktail'      => $cocktails,
             'ingridients'   => $records
         ));
-
     }
-
 
     public function loadAction()
     {
@@ -136,34 +99,18 @@ class CocktailController extends AbstractActionController
         $response = $this->getResponse();
         if ($request->isPost())
         {
-            $like = mysql_real_escape_string($this->params()->fromPost('param1'));
-            $limit = mysql_real_escape_string($this->params()->fromPost('param2'));
-            $offset= mysql_real_escape_string($this->params()->fromPost('param3'));
-
-            $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-            //$mySql = "SELECT * FROM cocktails";
-            $sql = new Sql($adapter);
-            $select = $sql->select();
-            $select->from('cocktails');
-            $select->where->like('cocktailName','%%' . $like . '%%');
-            $select->limit($limit);
-            $select->offset($offset);
-            $selectString = $sql->getSqlStringForSqlObject($select);
-            $results = $adapter->query($selectString, $adapter::QUERY_MODE_EXECUTE);
-            //$resultQuery = $adapter->query($mySql)->execute(array($firstParam, $secondParam));
+            $results = new Result();
+            $results = $results->getQueryResult($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'),$this->params()->fromPost('param1'),$this->params()->fromPost('param2'),$this->params()->fromPost('param3'));
             $records = array();
-
             foreach($results as $res)
             {
                 $records[] = $res;
             }
 
-
             $results = array(
                 'return1' => $records
             );
             $response->setContent(json_encode($results));
-
             return $response;
         }
         else

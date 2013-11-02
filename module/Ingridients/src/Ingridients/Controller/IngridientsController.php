@@ -64,15 +64,6 @@ class IngridientsController extends AbstractActionController
                 $this->getRequest()->getFiles()->toArray()
             );
 
-            /** if you're using ZF >= 2.1.1
-             *  you should update to the latest ZF2 version
-             *  and assign $data like the following
-            $data    = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-            );
-             */
-
             //set data post and file ...
             $form->setData($data);
 
@@ -293,7 +284,7 @@ class IngridientsController extends AbstractActionController
                                 if ($adapter->receive($info['name'])) {
                                     $ingridients->exchangeArray($form->getData());
 
-                                    // image adress
+                                    // image address
                                     $ingridients->ingridientImageAdress = $rand . '.png';
                                     $ingridients->idIngridient = $id;
                                     $this->getIngridientsTable()->saveIngridients($ingridients);

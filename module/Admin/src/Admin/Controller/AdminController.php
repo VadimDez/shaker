@@ -11,9 +11,9 @@ namespace Admin\Controller;
 
 use Admin\Form\AdminFormIngridients;
 use Admin\Form\AdminFormStuff;
-use Admin\Model\ActionsOnFolder;
 use Admin\Model\Category;
-use Admin\Model\LoadMoreData;
+use Admin\Model\DataLoader;
+use Admin\Model\FolderActions;
 use Admin\Model\Usage;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -67,7 +67,7 @@ class AdminController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $admin = new Admin();
-            $folder= new ActionsOnFolder();
+            $folder= new FolderActions();
             $form->setInputFilter($admin->getInputFilter());
 
             $nonFile = $request->getPost()->toArray();
@@ -185,8 +185,8 @@ class AdminController extends AbstractActionController
 
             if ($del == 'Yes') {
                 // delete folder and files in it
-                $folder = new ActionsOnFolder();
-                $folder->deleteFolder('./data/cocktailImages/' . str_replace(' ','_',$cocktail->cocktailName));
+                $folder = new FolderActions();
+                $folder->deleteFolder($cocktail->cocktailName, './data/cocktailImages');
                 // delete stuff from DB
                 $id = (int) $request->getPost('id');
                 $this->getTable($this->adminTable,'Admin\Model\AdminTable')->deleteCocktail($id);
@@ -211,15 +211,15 @@ class AdminController extends AbstractActionController
         if (!$id) {
             return $this->redirect()->toRoute('admin');
         }
-        $admin = new Admin();
+        $load    = new DataLoader();
         $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-        $form      = new AdminFormIngridients($adapter);
+        $form    = new AdminFormIngridients($adapter);
         // sql
-        $select = "id, u.idCocktail, u.idIngridient, quantity, ingridientName";
-        $from   = "used as u , cocktails as c , ingridients as i";
-        $where  = "u.idCocktail = c.idCocktail AND u.idIngridient = i.idIngridient AND u.idCocktail=?";
-        $mySql = "SELECT $select FROM $from WHERE $where";
-        $records = $admin->returnRecords($adapter,$id,$mySql);
+        $select  = "id, u.idCocktail, u.idIngridient, quantity, ingridientName";
+        $from    = "used as u , cocktails as c , ingridients as i";
+        $where   = "u.idCocktail = c.idCocktail AND u.idIngridient = i.idIngridient AND u.idCocktail=?";
+        $mySql   = "SELECT $select FROM $from WHERE $where";
+        $records = $load->returnRecords($adapter,$id,$mySql);
 
         $request = $this->getRequest();
         if ($request->isPost())
@@ -239,7 +239,7 @@ class AdminController extends AbstractActionController
             }
         }
         return array(
-            'id' => $id,
+            'id'   => $id,
             'form' => $form,
             'used' => $records
         );
@@ -283,7 +283,7 @@ class AdminController extends AbstractActionController
         if ($request->isPost())
         {
             $adapter  = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-            $moreData = new LoadMoreData();
+            $moreData = new DataLoader();
             return $response->setContent(json_encode($moreData->loadDataDynamically($adapter,$this->params()->fromPost('limit'),$this->params()->fromPost('offset'),'cocktails')));
         }
         else
@@ -299,7 +299,7 @@ class AdminController extends AbstractActionController
         if ($request->isPost())
         {
             $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-            $moreData = new LoadMoreData();
+            $moreData = new DataLoader();
             return $response->setContent(json_encode($moreData->loadDataDynamically($adapter,$this->params()->fromPost('limit'),$this->params()->fromPost('offset'),'categories')));
         }
         else
@@ -315,7 +315,7 @@ class AdminController extends AbstractActionController
         if ($request->isPost())
         {
             $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-            $moreData = new LoadMoreData();
+            $moreData = new DataLoader();
             return $response->setContent(json_encode($moreData->loadDataDynamically($adapter,$this->params()->fromPost('limit'),$this->params()->fromPost('offset'),'ingridients')));
         }
         else
@@ -379,11 +379,9 @@ class AdminController extends AbstractActionController
             $form->setInputFilter($category->getInputFilter());
             $form->setData($request->getPost());
 
-
             if ($form->isValid()) {
                 $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->saveCategory($category);
 
-                // Redirect to list of albums
                 return $this->redirect()->toRoute('admin');
             }
         }
@@ -411,7 +409,6 @@ class AdminController extends AbstractActionController
                 $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->deleteCategory($id);
             }
 
-            // Redirect to list of admins
             return $this->redirect()->toRoute('admin');
         }
 
@@ -430,7 +427,7 @@ class AdminController extends AbstractActionController
         if (!$id) {
             return $this->redirect()->toRoute('admin');
         }
-        $admin = new Admin();
+        $load = new DataLoader();
 
         $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $form      = new AdminFormStuff($adapter);
@@ -442,7 +439,7 @@ class AdminController extends AbstractActionController
         $where  = "u.idCocktail = c.idCocktail AND u.idStuff = s.idStuff AND u.idCocktail=?";
 //        $resultQuery = new ResultSet();
 //        $resultQuery = $resultQuery->initialize($stmt->execute());
-        $records = $admin->returnRecords($adapter,$id,"SELECT $select FROM $from WHERE $where");
+        $records = $load->returnRecords($adapter,$id,"SELECT $select FROM $from WHERE $where");
         $request = $this->getRequest();
 
         if ($request->isPost())

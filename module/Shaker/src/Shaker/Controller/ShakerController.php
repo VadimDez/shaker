@@ -10,10 +10,9 @@
 
 namespace Shaker\Controller;
 
+use Shaker\Model\Pull;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Shaker\Model\Shaker;          // <-- Add this import
-use Shaker\Form\ShakerForm;       // <-- Add this import
 
 class ShakerController extends AbstractActionController
 {
@@ -32,11 +31,9 @@ class ShakerController extends AbstractActionController
         {
             $string = mysql_real_escape_string($this->params()->fromPost('param1'));
 
-            $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+            $pull = new Pull();
 
-            $shaker = new Shaker();
-
-            $results = $shaker->getCocktailsByIngridient($string,$adapter);
+            $results = $pull->getCocktailsByIngridient($string,$this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
 
             $response->setContent(json_encode($results));
 

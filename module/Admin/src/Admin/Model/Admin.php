@@ -13,7 +13,6 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
-use Zend\Db\Sql\Sql;
 
 class Admin implements InputFilterAwareInterface
 {
@@ -34,17 +33,6 @@ class Admin implements InputFilterAwareInterface
     public function getArrayCopy()
     {
         return get_object_vars($this);
-    }
-
-    public function returnRecords($adapter,$id,$mySql)
-    {
-        $resultQuery = $adapter->query($mySql)->execute(array($id));
-        $records = array();
-        foreach($resultQuery as $res)
-        {
-            $records[] = $res;
-        }
-        return $records;
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -109,69 +97,5 @@ class Admin implements InputFilterAwareInterface
             $this->inputFilter = $inputFilter;
         }
         return $this->inputFilter;
-    }
-}
-
-class ActionsOnFolder
-{
-    public function createFolderAndReturnFolderName($name,$path)
-    {
-        $name = str_replace(' ','_',$name);
-        // check if folder exists, and if doesn't - create folder
-        $myFolder = $path . $name;
-        If(!file_exists($myFolder))
-        {
-            mkdir($myFolder);
-        }
-        return $myFolder;
-    }
-
-    public function deleteFolder($dirPath)
-    {
-        // delete folder with FILES in it
-        if (! is_dir($dirPath)) {
-            throw new \Exception("$dirPath must be a directory");
-        }
-
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-            $dirPath .= '/';
-        }
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                self::deleteDir($file);
-            } else {
-                unlink($file);
-            }
-        }
-        rmdir($dirPath);
-    }
-}
-
-class LoadMoreData
-{
-    public function loadDataDynamically($adapter,$limit, $offset,$from)
-    {
-        // pars.
-        $limit = mysql_real_escape_string($limit);
-        $offset= mysql_real_escape_string($offset);
-        // sql
-        $sql = new Sql($adapter);
-        $select = $sql->select();
-        $select->from($from);
-        $select->limit($limit);
-        $select->offset($offset);
-        $selectString = $sql->getSqlStringForSqlObject($select);
-        $results = $adapter->query($selectString, $adapter::QUERY_MODE_EXECUTE);
-
-        $records = array();
-        foreach($results as $res)
-        {
-            $records[] = $res;
-        }
-        $results = array(
-            'return1' => $records
-        );
-        return $results;
     }
 }

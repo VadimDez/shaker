@@ -14,7 +14,7 @@ class FolderActions
     {
         $name = str_replace(' ','_',$name);
         // check if folder exists, and if doesn't - create folder
-        $myFolder = $path . $name;
+        $myFolder = $path . '/' . $name;
         If(!file_exists($myFolder))
         {
             mkdir($myFolder);
@@ -22,8 +22,9 @@ class FolderActions
         return $myFolder;
     }
 
-    public function deleteFolder($dirPath)
+    public function deleteFolder($name, $dirPath)
     {
+        $dirPath = $dirPath . '/' . str_replace(' ','_',$name);
         // delete folder with FILES in it
         if (! is_dir($dirPath)) {
             throw new \Exception("$dirPath must be a directory");

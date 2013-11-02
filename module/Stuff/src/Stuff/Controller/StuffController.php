@@ -10,6 +10,7 @@
 
 namespace Stuff\Controller;
 
+use Admin\Model\FolderActions;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Stuff\Model\Stuff;          // <-- Add this import
@@ -61,15 +62,6 @@ class StuffController extends AbstractActionController
                 $this->getRequest()->getFiles()->toArray()
             );
 
-            /** if you're using ZF >= 2.1.1
-             *  you should update to the latest ZF2 version
-             *  and assign $data like the following
-            $data    = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-            );
-             */
-$adressForLargeImage="";
             //set data post and file ...
             $form->setData($data);
 
@@ -93,76 +85,54 @@ $adressForLargeImage="";
                     $form->setMessages(array('stufftImageAdress'=>$error ));
                     $form->setMessages(array('stuffMinImageAdress'=>$error ));
                 } else {
-                    $adapter->setDestination('./data/ingridientImages');
-                    $adapterMin->setDestination('./data/ingridientMinImages');
+                    $path = './data/stuffImages';
+                    $adapter->setDestination($path);
+                    $folder = new FolderActions();
+
                     $count = 0;
                     foreach ($adapter->getFileInfo() as $info)
                     {
                         // name
                         $name = $this->params()->fromPost('stuffName');
-                        $name = str_replace(' ','_',$name);
-                        // check if folder exist, and if dont - create folder
-                        $myFolder = './data/stuffImages/' . $name;
-                        If(!file_exists($myFolder))
-                        {
-                            mkdir($myFolder);
-                        }
-
+                        $myFolder = $folder->createFolderAndReturnFolderName($name,$path);
                         if($count == 0)
                         {
-                            $validator = new \Zend\Validator\File\Exists($myFolder);
-
-
-                                // image adress
-                                $imgAdress = $myFolder . '/Big.png';
-
-                                // Perform validation
-                                if (!$validator->isValid($imgAdress)) {
-                                    //
-
-                                    // file is valid
-                                    $adapter->addFilter('File\Rename',
-                                        array('target' => $imgAdress,
-                                            'overwrite' => true));
-                                    if ($adapter->receive($info['name'])) {
-                                        $stuff->exchangeArray($form->getData());
-
-                                        // image adress
-                                        //@todo solve this problem
-                                        //$stuff->ingridientImageAdress = $rand . '.png';
-                                        $adressForLargeImage = $name . '/Big.png';
-                                        $count++;
-                                    }
-                                }
+                            $size = '/Big.png';
                         }
-                        elseif($count == 1)
+                        else
                         {
-                            $validator = new \Zend\Validator\File\Exists($myFolder);
-
-                                // image adress
-                                $imgAdress = $myFolder . '/min.png';
-
-                                // Perform validation
-                                if (!$validator->isValid($imgAdress)) {
-                                    //
-                                    // file is valid
-                                    $adapterMin->addFilter('File\Rename',
-                                        array('target' => $imgAdress,
-                                            'overwrite' => true));
-                                    if ($adapterMin->receive($info['name'])) {
-                                        $stuff->exchangeArray($form->getData());
-
-                                        // image adress
-                                        $stuff->stuffMinImageAdress = $name . '/min.png';
-                                        $count++;
-                                    }
-                                }
-
+                            $size = '/min.png';
                         }
 
+                        $validator = new \Zend\Validator\File\Exists($path);
+                        // image adress
+                        $imgAddress = $myFolder . $size;
+
+                        // Perform validation
+                        if (!$validator->isValid($imgAddress))
+                        {
+                            // file is valid
+                            $adapter->addFilter('File\Rename',
+                                array('target' => $imgAddress,
+                                    'overwrite' => true));
+                            if ($adapter->receive($info['name'])) {
+                                $stuff->exchangeArray($form->getData());
+
+                                // image adress
+                                if($count == 0)
+                                {
+                                    $stuff->stuffImageAdress = $name . '/Big.png';
+                                }
+                                else
+                                {
+                                    $stuff->stuffMinImageAdress = $name . '/min.png';
+                                }
+                                $count++;
+                            }
+                        }
                     }
 
-                    $stuff->stuffImageAdress = $adressForLargeImage;
+
                     $this->getStuffTable()->saveStuff($stuff);
                 }
 
@@ -183,8 +153,6 @@ $adressForLargeImage="";
             ));
         }
 
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
         try {
             $stuff = $this->getStuffTable()->getStuff($id);
         }
@@ -211,14 +179,6 @@ $adressForLargeImage="";
                 $this->getRequest()->getFiles()->toArray()
             );
 
-            /** if you're using ZF >= 2.1.1
-             *  you should update to the latest ZF2 version
-             *  and assign $data like the following
-            $data    = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-            );
-             */
 
             //set data post and file ...
             $form->setData($data);
@@ -247,49 +207,35 @@ $adressForLargeImage="";
                     } //set formElementErrors
                     $form->setMessages(array('ingridientImage'=>$error ));
                 } else {
-
-                    $adapter->setDestination('./data/ingridientImages');
+                    $path = './data/ingridientImages';
+                    $adapter->setDestination($path);
 
                     foreach ($adapter->getFileInfo() as $info)
                     {
-                        $validator = new \Zend\Validator\File\Exists('./data/ingridientImages');
+                        $name = $this->params()->fromPost('stuffName');
+                        $folder = new FolderActions();
+                        $myFolder = $folder->createFolderAndReturnFolderName($name,$path);
+                        // image address
+                        $imgAddress = $myFolder . '/Big.png';
 
-                        $ckeckIfExist = false;
-                        $rand = rand(1,1000);
-
-                        while($ckeckIfExist == false)
+                        // Perform validation
+                        $validator = new \Zend\Validator\File\Exists($path);
+                        if (!$validator->isValid($imgAddress))
                         {
 
-                            // image adress
-                            $imgAdress = './data/ingridientImages/' . $rand . '.png';
+                            // file is valid
+                            $adapter->addFilter('File\Rename',
+                                array('target' => $imgAddress,
+                                    'overwrite' => true));
+                            if ($adapter->receive($info['name'])) {
+                                $stuff->exchangeArray($form->getData());
 
-                            // Perform validation
-                            if (!$validator->isValid($imgAdress)) {
-                                //
-                                $ckeckIfExist = true;
-
-                                // file is valid
-                                $adapter->addFilter('File\Rename',
-                                    array('target' => $imgAdress,
-                                        'overwrite' => true));
-                                if ($adapter->receive($info['name'])) {
-                                    $stuff->exchangeArray($form->getData());
-
-                                    // image adress
-                                    $stuff->ingridientImageAdress = $rand . '.png';
-                                    $stuff->idIngridient = $id;
-                                    $this->getStuffTable()->saveStuff($stuff);
-                                }
-                            }
-                            else
-                            {
-                                // if exist random ID
-                                // regenerate it
-                                $rand = rand(1,1000);
+                                // image adress
+                                $stuff->ingridientImageAdress = $imgAddress;
+                                $stuff->idIngridient = $id;
+                                $this->getStuffTable()->saveStuff($stuff);
                             }
                         }
-
-
                     }
                 }
 
@@ -320,36 +266,17 @@ $adressForLargeImage="";
         if ($request->isPost())
         {
             $del = $request->getPost('del', 'No');
-
-            if ($del == 'Yes') {
-
+            if ($del == 'Yes')
+            {
                 // delete folder and files in it
                 $stuff = $this->getStuffTable()->getStuff($id);
-                $dirPath = $stuff->stuffName;
-                $dirPath = './data/stuffImages/' . str_replace(' ','_',$dirPath);
-
-                if (! is_dir($dirPath)) {
-                    throw new InvalidArgumentException("$dirPath must be a directory");
-                }
-
-                if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-                    $dirPath .= '/';
-                }
-                $files = glob($dirPath . '*', GLOB_MARK);
-                foreach ($files as $file) {
-                    if (is_dir($file)) {
-                        self::deleteDir($file);
-                    } else {
-                        unlink($file);
-                    }
-                }
-                rmdir($dirPath);
+                $folder = new FolderActions();
+                $folder->deleteFolder($stuff->stuffName,'./data/stuffImages/');
 
                 // delete stuff from DB
                 $id = (int) $request->getPost('id');
                 $this->getStuffTable()->deleteStuff($id);
             }
-
             // Redirect to list of stuffs
             return $this->redirect()->toRoute('admin');
         }
@@ -372,8 +299,6 @@ $adressForLargeImage="";
             ));
         }
 
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
         try {
             $stuff = $this->getStuffTable()->getStuff($id);
         }
