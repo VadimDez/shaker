@@ -40,7 +40,10 @@ class StuffController extends AbstractActionController
         ));
     }
 
-    // Add content to this method:
+    /*
+     * Stuff part:
+     * add, edit, delete
+     */
     public function addAction()
     {
         //@todo refactoring!!!
@@ -238,13 +241,6 @@ class StuffController extends AbstractActionController
                         }
                     }
                 }
-
-                // img
-
-
-                //$this->getStuffTable()->saveStuff($stuff);
-
-                // Redirect to list of albums
                 return $this->redirect()->toRoute('stuff');
             }
         }

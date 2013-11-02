@@ -13,8 +13,8 @@ namespace Ingridients\Controller;
 use Admin\Model\FolderActions;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Ingridients\Model\Ingridients;          // <-- Add this import
-use Ingridients\Form\IngridientsForm;       // <-- Add this import
+use Ingridients\Model\Ingridients;
+use Ingridients\Form\IngridientsForm;
 
 use Zend\Validator\File\Size;
 
@@ -190,15 +190,6 @@ class IngridientsController extends AbstractActionController
                 $this->getRequest()->getFiles()->toArray()
             );
 
-            /** if you're using ZF >= 2.1.1
-             *  you should update to the latest ZF2 version
-             *  and assign $data like the following
-            $data    = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-            );
-             */
-
             //set data post and file ...
             $form->setData($data);
 
@@ -269,13 +260,6 @@ class IngridientsController extends AbstractActionController
                         }
                     }
                 }
-
-                // img
-
-
-                //$this->getIngridientsTable()->saveIngridients($ingridients);
-
-                // Redirect to list of albums
                 return $this->redirect()->toRoute('ingridients');
             }
         }
@@ -330,8 +314,6 @@ class IngridientsController extends AbstractActionController
             ));
         }
 
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
         try {
             $ingridient = $this->getIngridientsTable()->getIngridients($id);
         }
