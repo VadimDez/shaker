@@ -9,9 +9,9 @@ Based on Zend Framework 2
 
 Main page
 ======================
-[![solarized dualmode](https://raw.github.com/VadimDez/shaker/master/mainPage.png)]
+![solarized dualmode](https://raw.github.com/VadimDez/shaker/master/mainPage.png)
 
 
 Admin page
 ======================
-[![solarized dualmode](https://raw.github.com/VadimDez/shaker/master/adminPage.png)]
+![solarized dualmode](https://raw.github.com/VadimDez/shaker/master/adminPage.png)
