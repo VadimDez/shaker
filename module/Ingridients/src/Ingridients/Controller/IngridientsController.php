@@ -162,8 +162,6 @@ class IngridientsController extends AbstractActionController
             ));
         }
 
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
         try {
             $ingridients = $this->getIngridientsTable()->getIngridients($id);
         }

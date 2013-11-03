@@ -49,10 +49,10 @@ class InvTable
         if ($id == 0) {
             $this->tableGateway->insert($data);
         } else {
-            if ($this->getAlbum($id)) {
+            if ($this->getInv($id)) {
                 $this->tableGateway->update($data, array('idInvUsage' => $id));
             } else {
-                throw new \Exception('Album id does not exist');
+                throw new \Exception('Stuff id does not exist');
             }
         }
     }

@@ -235,7 +235,6 @@ class AdminController extends AbstractActionController
                 $usage->idCocktail = $id;
                 $this->getTable($this->usageTable,'Admin\Model\UsageTable')->saveUsage($usage);
 
-                // Redirect to list of albums
                 return $this->redirect()->toRoute('admin');
             }
         }
@@ -344,7 +343,6 @@ class AdminController extends AbstractActionController
                 $category->exchangeArray($form->getData());
                 $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->saveCategory($category);
 
-                // Redirect to list of albums
                 return $this->redirect()->toRoute('admin');
             }
         }
@@ -360,8 +358,6 @@ class AdminController extends AbstractActionController
             ));
         }
 
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
         try {
             $category = $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->getCategory($id);
         }
