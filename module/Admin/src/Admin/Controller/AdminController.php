@@ -144,7 +144,7 @@ class AdminController extends AbstractActionController
         }
 
         try {
-            $admin = $this->getTable($this->adminTable,'Admin\Model\AdminTable')->getCocktail($id);
+            $admin = $this->getTable($this->adminTable,'Admin\Model\AdminTable')->getCocktail('idCocktail',$id);
         }
         catch (\Exception $ex) {
             return $this->redirect()->toRoute('admin', array(
@@ -179,7 +179,7 @@ class AdminController extends AbstractActionController
         if (!$id) {
             return $this->redirect()->toRoute('admin');
         }
-        $cocktail = $this->getTable($this->adminTable,'Admin\Model\AdminTable')->getCocktail($id);
+        $cocktail = $this->getTable($this->adminTable,'Admin\Model\AdminTable')->getRecord('idCocktail',$id);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $del = $request->getPost('del', 'No');
@@ -190,7 +190,7 @@ class AdminController extends AbstractActionController
                 $folder->deleteFolder($cocktail->cocktailName, './data/cocktailImages/');
                 // delete stuff from DB
                 $id = (int) $request->getPost('id');
-                $this->getTable($this->adminTable,'Admin\Model\AdminTable')->deleteCocktail($id);
+                $this->getTable($this->adminTable,'Admin\Model\AdminTable')->deleteRecord('idCocktail',$id);
             }
 
             // Redirect to list of admins
@@ -258,7 +258,7 @@ class AdminController extends AbstractActionController
 
             if ($del == 'Yes') {
                 $id = (int) $request->getPost('id');
-                $table->deleteUsage($id);
+                $table->deleteRecord('id',$id);
             }
 
             // Redirect to list of admins
@@ -266,7 +266,7 @@ class AdminController extends AbstractActionController
         }
         return array(
             'id'    => $id,
-            'admin' => $table->getUsage($id)
+            'admin' => $table->getRecord('id',$id)
         );
     }
 
@@ -359,7 +359,7 @@ class AdminController extends AbstractActionController
         }
 
         try {
-            $category = $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->getCategory($id);
+            $category = $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->getRecord('idCategory',$id);
         }
         catch (\Exception $ex) {
             return $this->redirect()->toRoute('admin', array(
@@ -403,14 +403,14 @@ class AdminController extends AbstractActionController
 
             if ($del == 'Yes') {
                 $id = (int) $request->getPost('id');
-                $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->deleteCategory($id);
+                $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->deleteRecord('idCategory',$id);
             }
             return $this->redirect()->toRoute('admin');
         }
 
         return array(
             'id'    => $id,
-            'category' => $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->getCategory($id)
+            'category' => $this->getTable($this->categoryTable,'Admin\Model\CategoryTable')->getRecord('idCategory',$id)
         );
     }
 

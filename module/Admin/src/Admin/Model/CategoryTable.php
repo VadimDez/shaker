@@ -9,33 +9,8 @@
 
 namespace Admin\Model;
 
-use Zend\Db\TableGateway\TableGateway;
-
-class CategoryTable
+class CategoryTable extends FatherTable
 {
-    protected $tableGateway;
-
-    public function __construct(TableGateway $tableGateway)
-    {
-        $this->tableGateway = $tableGateway;
-    }
-
-    public function fetchAll()
-    {
-        $resultSet = $this->tableGateway->select();
-        return $resultSet;
-    }
-
-    public function getCategory($id)
-    {
-        $id  = (int) $id;
-        $rowset = $this->tableGateway->select(array('idCategory' => $id));
-        $row = $rowset->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $id");
-        }
-        return $row;
-    }
 
     public function saveCategory(Category $category)
     {
@@ -43,7 +18,7 @@ class CategoryTable
             'idCategory'            => $category->idCategory,
             'categoryName'          => $category->categoryName
         );
-        $id = $category->idCategory;
+        $id = (int)$category->idCategory;
         if ($id == 0) {
             $this->tableGateway->insert($data);
         } else {
@@ -54,10 +29,5 @@ class CategoryTable
             }
         }
 
-    }
-
-    public function deleteCategory($id)
-    {
-        $this->tableGateway->delete(array('idCategory' => $id));
     }
 }

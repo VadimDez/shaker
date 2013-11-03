@@ -10,34 +10,8 @@
 
 namespace Admin\Model;
 
-use Zend\Db\TableGateway\TableGateway;
-
-class InvTable
+class InvTable extends FatherTable
 {
-    protected $tableGateway;
-
-    public function __construct(TableGateway $tableGateway)
-    {
-        $this->tableGateway = $tableGateway;
-    }
-
-    public function fetchAll()
-    {
-        $resultSet = $this->tableGateway->select();
-        return $resultSet;
-    }
-
-    public function getInv($id)
-    {
-        $id  = (int) $id;
-        $rowset = $this->tableGateway->select(array('idInvUsage' => $id));
-        $row = $rowset->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $id");
-        }
-        return $row;
-    }
-
     public function saveInv(Inv $inv)
     {
         $data = array(
@@ -55,10 +29,5 @@ class InvTable
                 throw new \Exception('Stuff id does not exist');
             }
         }
-    }
-
-    public function deleteInv($id)
-    {
-        $this->tableGateway->delete(array('idInvUsage' => $id));
     }
 }

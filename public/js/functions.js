@@ -23,8 +23,7 @@ $(document).ready(function()
 
                 jQuery.each( result, function(i,val) {
                     jQuery.each( val, function(j,val_j) {
-
-                    $("#cocktails").append("<tr><td><a href='cocktail/details/" + val_j.idCocktail + "'>" + val_j.cocktailName + "</a></td><td><a href='admin/edit/"+val_j.idCocktail+"'>Edit</a> <a href='admin/ingridients/"+val_j.idCocktail+"'>Ingridients</a> <a href='admin/delete/"+val_j.idCocktail+"'>Delete</a></td></tr>");
+                    $("#cocktails").append("<tr><td><a href='/cocktails/public/cocktail/details/" + val_j.idCocktail + "'>" + val_j.cocktailName + "</a></td><td><a href='edit/"+val_j.idCocktail+"'>Edit</a> <a href='ingridients/"+val_j.idCocktail+"'>Ingridients</a> <a href='stuff/"+val_j.idStuff+"'> Stuff </a> <a href='delete/"+val_j.idCocktail+"'>Delete</a></td></tr>");
                     });
                 });
 
