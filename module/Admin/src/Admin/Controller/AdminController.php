@@ -443,8 +443,7 @@ class AdminController extends AbstractActionController
             $inv = new Inv();
             $form->setInputFilter($inv->getInputFilter());
             $form->setData($request->getPost());
-//            var_dump($request->getPost());
-//            die();
+
             if ($form->isValid()) {
 
                 $inv->exchangeArray($form->getData());
