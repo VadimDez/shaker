@@ -1,7 +1,7 @@
 Shaker
 =======================
-Web platform for cocktails receipts.
-Permits to search cocktails receipts or after mixing ingredients receive list of the cocktails that contain indicated ingredient or multiple ingredients.
+Web platform for cocktail recipes.
+Permits to search cocktail recipes. Also after mixing ingredients shows list of the cocktails that contains searched ingredient/ingredients.
 
 ======================
 Based on Zend Framework 2
